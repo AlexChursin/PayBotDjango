@@ -20,8 +20,8 @@ class TableTransactions(models.Model):
     class Meta:
         managed = False
         db_table = 'table_transactions'
-        verbose_name = 'Транзакция'
-        verbose_name_plural = 'Транзакцию'
+        verbose_name = 'транзакцию'
+        verbose_name_plural = 'транзакции'
 
 
 class TableUsers(models.Model):
@@ -39,6 +39,6 @@ class TableUsers(models.Model):
     class Meta:
         managed = False
         db_table = 'table_users'
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователя'
+        verbose_name = 'пользователя'
+        verbose_name_plural = 'пользователи'
 
