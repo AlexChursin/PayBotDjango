@@ -34,6 +34,7 @@ class Migration(migrations.Migration):
                 ('last_trans', models.TextField(blank=True, null=True, verbose_name='последняя транзакция')),
                 ('last_wallet', models.TextField(blank=True, null=True, verbose_name='последний кошелек')),
                 ('limits', models.IntegerField(blank=True, null=True, verbose_name='запуски')),
+                ('completed', models.IntegerField(blank=True, null=True, verbose_name='состояние бота')),
             ],
             options={
                 'verbose_name': 'Пользователь',
