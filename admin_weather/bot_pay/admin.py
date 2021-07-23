@@ -11,8 +11,8 @@ from .models import TableUsers, TableTransactions
 # Register your models here.
 @admin.register(TableUsers)
 class WeatherTypeAdmin(admin.ModelAdmin):
-    search_fields = ("telegram_id", 'hash')
-    list_display = ("telegram_id", "user_language", "hash", 'last_trans', 'last_wallet', 'limits', 'completed')
+    search_fields = ("telegram_id", 'user_language', 'hash',)
+    list_display = ("telegram_id", 'completed', "user_language", "hash", 'last_trans', 'last_wallet', 'limits', )
     list_filter = ["user_language", "completed"]
 
 
