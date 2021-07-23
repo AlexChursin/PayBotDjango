@@ -12,13 +12,15 @@ from .models import TableUsers, TableTransactions
 @admin.register(TableUsers)
 class WeatherTypeAdmin(admin.ModelAdmin):
     search_fields = ("telegram_id", 'hash')
-    list_display = ("telegram_id", "user_language", "hash",'last_trans', 'last_wallet', 'limits')
+    list_display = ("telegram_id", "user_language", "hash", 'last_trans', 'last_wallet', 'limits', 'completed')
+    list_filter = ["user_language",  "completed"]
 
 
 @admin.register(TableTransactions)
 class TempRangeAdmin(admin.ModelAdmin):
     search_fields = ("telegram_id", "transaction_id", "wallet",)
     list_display = ("telegram_id", "transaction_id", "wallet",)
+
     # #
     # def view_image_link(self, obj):
     #     count = Image.objects.annotate(temp_range=Count('image'))
