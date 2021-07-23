@@ -13,7 +13,7 @@ from .models import TableUsers, TableTransactions
 class WeatherTypeAdmin(admin.ModelAdmin):
     search_fields = ("telegram_id", 'hash')
     list_display = ("telegram_id", "user_language", "hash", 'last_trans', 'last_wallet', 'limits', 'completed')
-    list_filter = ["user_language",  "completed"]
+    list_filter = ["user_language", "completed"]
 
 
 @admin.register(TableTransactions)
@@ -28,3 +28,6 @@ class TempRangeAdmin(admin.ModelAdmin):
     #
     # view_image_link.short_description = "Images"
 
+
+admin.site.site_title = 'Администрирование платежного бота'
+admin.site.site_header = 'Админ панель бота оплаты'
