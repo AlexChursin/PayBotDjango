@@ -72,7 +72,7 @@ if DEBUG:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
+            'ENGINE': 'django.db.backends.mysql',
             'DATABASE': 'bots',
             'USER': 'bots_user',
             'HOST': 'localhost',
