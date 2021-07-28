@@ -2,3 +2,4 @@
 !*/bot_pay/migrations/__init__.py
 .*
 !/.gitignore
+settings.py
