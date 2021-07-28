@@ -18,6 +18,7 @@ class TableTransactions(models.Model):
         return self.telegram_id
 
     class Meta:
+        managed = False
         db_table = 'table_transactions'
         verbose_name = 'транзакцию'
         verbose_name_plural = 'транзакции'
@@ -36,6 +37,7 @@ class TableUsers(models.Model):
         return self.telegram_id
 
     class Meta:
+        managed = False
         db_table = 'table_users'
         verbose_name = 'пользователя'
         verbose_name_plural = 'пользователи'
