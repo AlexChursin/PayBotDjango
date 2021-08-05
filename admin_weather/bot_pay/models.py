@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 
 from django.db import models
 import os
@@ -31,11 +30,8 @@ class TableUsers(models.Model):
     hash = models.TextField('токен', blank=True, null=True)
     last_trans = models.TextField('последняя транзакция', blank=True, null=True)
     last_wallet = models.TextField('последний кошелек', blank=True, null=True)
-    limits = models.IntegerField('запуски', blank=True, null=True)
-    completed = models.IntegerField('состояние бота', blank=True, null=True)
-    created = models.DateTimeField('создано', blank=True, null=True, auto_now_add=True, editable=True)
-    updated = models.DateTimeField('обновлено', blank=True, null=True, auto_now=True,  editable=True)
-
+   # limits = models.IntegerField('запуски', blank=True, null=True)
+   # completed = models.IntegerField('состояние бота', blank=True, null=True)
 
     def __str__(self):
         return self.telegram_id
