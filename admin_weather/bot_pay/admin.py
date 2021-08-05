@@ -12,7 +12,7 @@ from .models import TableUsers, TableTransactions
 @admin.register(TableUsers)
 class WeatherTypeAdmin(admin.ModelAdmin):
     search_fields = ("telegram_id", 'user_language', 'hash', 'last_trans', 'last_wallet', )
-    list_display = ("telegram_id", 'completed', "user_language", "hash", 'last_trans', 'last_wallet', 'limits', 'created', 'updated')
+    list_display = ("telegram_id", 'completed', "user_language", "hash", 'last_trans', 'last_wallet', 'limits',  )
     list_filter = ["user_language", "completed"]
 
 
