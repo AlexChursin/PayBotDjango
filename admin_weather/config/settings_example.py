@@ -62,23 +62,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'telegram_bot_2.db',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'DATABASE': 'bots',
+        'USER': 'bots_user',
+        'HOST': 'localhost',
+        'PASSWORD': 'MiP@ss1!'
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'DATABASE': 'bots',
-            'USER': 'bots_user',
-            'HOST': 'localhost',
-            'PASSWORD': 'MiP@ss1!'
-        }
-    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
