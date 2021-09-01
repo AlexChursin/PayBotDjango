@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import *
 
 
-# Register your models here.
 @admin.register(TableUsers)
 class TableUsersAdmin(admin.ModelAdmin):
     search_fields = ("telegram_id", 'user_language', 'hash', 'last_trans', 'last_wallet', )

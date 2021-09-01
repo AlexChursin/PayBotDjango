@@ -2,6 +2,7 @@ from django.db import models
 
 
 class TableTransactions(models.Model):
+    """Модель транзакции"""
     telegram_id = models.TextField('телега', primary_key=True)
     transaction_id = models.TextField('транзакция', blank=True, null=True)
     wallet = models.TextField('кошелек', blank=True, null=True)
@@ -16,6 +17,7 @@ class TableTransactions(models.Model):
 
 
 class PayType(models.Model):
+    """Модель типов оплаты"""
     type = models.CharField('тип оплаты', max_length=150)
     desc = models.TextField('описание')
 
@@ -28,6 +30,7 @@ class PayType(models.Model):
 
 
 class Refer(models.Model):
+    """Модель рефералки"""
     url = models.CharField('реферальная ссылка', max_length=100)
     refers = models.ManyToManyField('TableUsers', verbose_name='приглашенные гости')
     pay_type_id = models.ForeignKey(PayType, verbose_name='тип оплаты', on_delete=models.DO_NOTHING, default=1)
@@ -44,6 +47,7 @@ class Refer(models.Model):
 
 
 class TableUsers(models.Model):
+    """Модель пользователя"""
     telegram_id = models.TextField('телега', primary_key=True)
     user_language = models.TextField('язык', blank=True, null=True)
     hash = models.TextField('токен', blank=True, null=True)
