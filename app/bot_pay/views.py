@@ -5,39 +5,34 @@ from ninja import Router, Query
 from ninja.orm import create_schema
 from . import models
 from http import HTTPStatus
-from .schemas import Message, PatchUser
-from .services.logic import get_refer_url, create_user, reward_referral_user
+from .schemas import Message, PatchUser, ReferOut, UserOut, ReferOutPartial
+from .services.logic import get_refer_url, create_user, reward_referral_user, create_refer
 
 router = Router()
 
 
 @sync_to_async
-@router.get("/users/{telegram_id}/ref", response={HTTPStatus.MULTI_STATUS: create_schema(models.Refer, depth=1),
-                                                  201: create_schema(models.Refer)})
+@router.get("/users/{telegram_id}/ref", response={HTTPStatus.CREATED: ReferOut,
+                                                  HTTPStatus.PARTIAL_CONTENT: ReferOutPartial})
 def get_ref(request, telegram_id: str, bot_name: str = None, expand: bool = False):
     user = get_object_or_404(models.TableUsers.objects.select_related('refer_id'), telegram_id=telegram_id)
     if user.refer_id is not None:
-        res = user.refer_id
+        refer = user.refer_id
     else:
-        r = models.Refer(url=f'https://t.me/{bot_name}?start={telegram_id}_{bot_name}')
-        r.save(force_insert=True)
-        user.refer_id = r
-        user.save()
-        res = r
-    if expand:
-        return HTTPStatus.MULTI_STATUS, res
-    else:
-        return 201, res
+        refer_url = get_refer_url(bot_name, telegram_id)
+        refer = create_refer(user, refer_url)
+    status = HTTPStatus.CREATED if expand else HTTPStatus.PARTIAL_CONTENT
+    return status, refer
 
 
 p_types = models.PayType.objects.all()
 
 
 @sync_to_async
-@router.patch("/users/{telegram_id}/ref/type", response={HTTPStatus.OK: create_schema(models.TableUsers), 404: Message})
+@router.patch("/users/{telegram_id}/ref/type", response={HTTPStatus.OK: UserOut, HTTPStatus.NOT_FOUND: Message})
 def change_ref_type(request, telegram_id: str, pay_type: str):
     user = get_object_or_404(models.TableUsers.objects.select_related('refer_id'), telegram_id=telegram_id)
-    r = [t for t in p_types if pay_type.lower() == t.type.lower()]
+    r = list(filter(lambda x: pay_type.lower() == x.type.lower(), p_types))
     if len(r):
         user.refer_id.pay_type_id = r[0]
         user.refer_id.save()
@@ -64,7 +59,7 @@ def put_ref(request, telegram_id: str, ref_id: str, ref: create_schema(models.Re
 
 
 @sync_to_async
-@router.post("/users/{telegram_id}/ref/add", response={HTTPStatus.OK: create_schema(models.Refer, depth=1),
+@router.post("/users/{telegram_id}/ref/add", response={HTTPStatus.OK: ReferOut,
                                                        HTTPStatus.NOT_FOUND: Message,
                                                        HTTPStatus.CONFLICT: Message})
 def new_ref(request, telegram_id: str, add_telegram_id: str, bot_name: str):
@@ -78,18 +73,15 @@ def new_ref(request, telegram_id: str, add_telegram_id: str, bot_name: str):
         return HTTPStatus.NOT_FOUND, Message(detail='user not found')
 
     add_user = create_user(telegram_id, add_telegram_id)
-    r = models.Refer(url=get_refer_url(bot_name, telegram_id))
-    r.save(force_insert=True)
-    r.refers.add(add_user)
-    user.refer_id = r
-    user.save()
+    refer_url = get_refer_url(bot_name, telegram_id)
+    r = create_refer(user, refer_url, add_user)
     return r
 
 
 @sync_to_async
 @router.patch("/users/{telegram_id}", tags=['Users'],
-              response={HTTPStatus.OK: create_schema(models.TableUsers), HTTPStatus.NOT_FOUND: Message})
-def patch_user(request, telegram_id: str, user: PatchUser):
+              response={HTTPStatus.OK: UserOut, HTTPStatus.NOT_FOUND: Message})
+def patch_user(request, telegram_id: str, user: PatchUser = Query(...)):
     db_user = get_object_or_404(models.TableUsers, telegram_id=telegram_id)
     for key, value in user.dict(exclude_none=True).items():
         setattr(db_user, key, value)
@@ -100,7 +92,7 @@ def patch_user(request, telegram_id: str, user: PatchUser):
 @sync_to_async
 @router.patch("/users/{telegram_id}/reward_referral_user", tags=['Users'],
               response={HTTPStatus.OK: Message, HTTPStatus.NOT_MODIFIED: Message})
-def reward_refer(request, telegram_id: str = Query(..., title='ID телеграмма')):
+def reward_refer(request, telegram_id: str):
     user = get_object_or_404(models.TableUsers, telegram_id=telegram_id)
     if user.from_refer is not None:
         ref_user = get_object_or_404(models.TableUsers.objects.select_related('refer_id'), telegram_id=user.from_refer)
@@ -109,5 +101,3 @@ def reward_refer(request, telegram_id: str = Query(..., title='ID телегра
             return HTTPStatus.OK, Message(detail='refer gem add')
 
     return HTTPStatus.NOT_MODIFIED, Message(detail='refer not found')
-
-

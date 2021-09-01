@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Model
 
+from .. import models
+
 
 def get_refer_url(bot_name: str, telegram_id: str) -> str:
     return f'https://t.me/{bot_name}?start={telegram_id}_{bot_name}'
@@ -18,6 +20,16 @@ def create_user(telegram_id: str, add_telegram_id: str) -> Model:
                                            )
 
 
+def create_refer(user, refer_url, add_user=None) -> Model:
+    r = models.Refer(url=refer_url)
+    r.save(force_insert=True)
+    if add_user is not None:
+        r.refers.add(add_user)
+    user.refer_id = r
+    user.save()
+    return r
+
+
 def reward_referral_user(ref, ref_user) -> bool:
     ref_type, count_dollar, count_gem = ref.pay_type_id.type.upper(), ref.dollars_paid, ref.gem_paid
     count_must_pay = (len(ref.refers.all()) - (count_dollar + count_gem))
@@ -29,3 +41,4 @@ def reward_referral_user(ref, ref_user) -> bool:
             ref_user.save()
             return True
     return False
+

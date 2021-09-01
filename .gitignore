@@ -1,5 +1,5 @@
-admin_weather/bot_pay/migrations/*
-!admin_weather/bot_pay/migrations/__init__.py
+app/bot_pay/migrations/*
+!app/bot_pay/migrations/__init__.py
 .*
 !/.gitignore
 settings.py
