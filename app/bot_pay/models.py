@@ -18,7 +18,8 @@ class TableTransactions(models.Model):
 
 class PayType(models.Model):
     """Модель типов оплаты"""
-    type = models.CharField('тип оплаты', max_length=150)
+    choices = (('DOLLAR', 'Dollar'), ('GEM', 'Gem'))
+    type = models.CharField('тип оплаты', max_length=150, choices=choices)
     desc = models.TextField('описание')
 
     def __str__(self):

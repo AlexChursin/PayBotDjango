@@ -1,12 +1,13 @@
 from ninja import Schema
 from ninja.orm import create_schema
+from ninja.params import Param
 from pydantic import Field
 from . import models
 
 
 class PatchUser(Schema):
     """Схема изменения любого параметра пользователя"""
-    user_language: str = None
+    user_language: str = Param(default=None, description='язык', alias='ayzuk')
     hash: str = None
     last_trans: str = None
     last_wallet: str = None
