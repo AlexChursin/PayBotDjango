@@ -1,11 +1,14 @@
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path
+from bot_pay.views import router
+from ninja import NinjaAPI
 
-#from bot_pay import views
+api = NinjaAPI()
+api.add_router('', router, tags=['Referral'])
 
 urlpatterns = [
-    path('', admin.site.urls),
-  #  path('', views.api.urls)
+    path('admin/', admin.site.urls),
+    path('api/', api.urls)
 ]
-urlpatterns += staticfiles_urlpatterns()
+#urlpatterns += staticfiles_urlpatterns()
